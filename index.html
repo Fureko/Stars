@@ -1,0 +1,674 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0c0922">
+<meta name="color-scheme" content="dark">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>Poussière d'Étoiles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Nunito:wght@500;600;700;800&display=swap">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+[hidden]{display:none!important}
+/* Layout: a phone app in a magical night sky. One glowing pouch fills with stardust at the top; task charms below; a bottom bar switches to the Constellation of finished pouches. */
+:root{
+  --night:#0c0922;
+  --deep:#161238;
+  --panel:#1d1749;
+  --line:#3a3184;
+  --text:#f5f1ff;
+  --soft:#bcb3ea;
+  --dim:#7e75bb;
+  --pink:#ff92d2;
+  --gold:#ffd57e;
+  --sky:#93dcff;
+  --display:"Cinzel","Cormorant Garamond",Georgia,serif;
+  --body:"Nunito","Segoe UI",system-ui,-apple-system,Roboto,sans-serif;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{margin:0;background:var(--night);color:var(--text);font-family:var(--body);font-size:15px;line-height:1.4;-webkit-font-smoothing:antialiased;overflow-x:hidden;-webkit-tap-highlight-color:transparent}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--night)}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+#sky{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.nebula{position:fixed;inset:0;z-index:0;pointer-events:none;background:
+  radial-gradient(60vmax 45vmax at 10% 0%,color-mix(in srgb,var(--pink) 18%,transparent),transparent 70%),
+  radial-gradient(55vmax 50vmax at 100% 35%,color-mix(in srgb,var(--sky) 14%,transparent),transparent 70%),
+  radial-gradient(70vmax 50vmax at 40% 110%,color-mix(in srgb,#7a5cff 22%,transparent),transparent 70%)}
+#fx{position:fixed;inset:0;width:100%;height:100%;z-index:60;pointer-events:none}
+
+.app{position:relative;z-index:1;max-width:520px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:14px calc(96px + env(safe-area-inset-bottom,0px))}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{margin:0;font-family:var(--display);font-weight:700;font-size:1.15rem;letter-spacing:.08em;text-transform:uppercase;background:linear-gradient(90deg,var(--gold),var(--pink) 55%,var(--sky));-webkit-background-clip:text;background-clip:text;color:transparent}
+.wallet{display:flex;align-items:center;gap:6px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--gold);background:color-mix(in srgb,var(--deep) 80%,transparent);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:.88rem}
+.wallet svg{width:14px;height:14px}
+
+/* ---------- pochette ---------- */
+.stage{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:6px}
+.pouch-wrap{position:relative;display:grid;place-items:center;width:100%}
+.pouch-wrap::before{content:"";position:absolute;width:62%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--pink) 30%,transparent),transparent 65%);filter:blur(10px);animation:halo 5s ease-in-out infinite alternate}
+@keyframes halo{to{transform:scale(1.12);opacity:.75}}
+#pouchSvg{position:relative;width:var(--pw,200px);max-width:72vw;height:auto;overflow:visible;transition:width .5s cubic-bezier(.3,1.4,.5,1)}
+#pouchSvg.bump{animation:bump .5s cubic-bezier(.3,1.6,.5,1)}
+@keyframes bump{30%{transform:scale(1.07,.95)}60%{transform:scale(.97,1.03)}}
+#fillGroup{transition:transform 1s cubic-bezier(.2,1,.3,1)}
+.wave{animation:wave 3.2s linear infinite}
+.wave2{animation:wave 4.6s linear infinite reverse;opacity:.55}
+@keyframes wave{to{transform:translateX(-80px)}}
+.twinkle{animation:tw 2.4s ease-in-out infinite}
+@keyframes tw{50%{opacity:.25}}
+.reward{text-align:center;display:flex;flex-direction:column;gap:2px;min-width:0;max-width:100%}
+.reward small{font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--soft);font-weight:800}
+.reward h2{margin:0;font-family:var(--display);font-weight:700;font-size:1.55rem;line-height:1.15;text-wrap:balance;overflow-wrap:anywhere}
+.count{font-weight:800;font-variant-numeric:tabular-nums;font-size:1rem;color:var(--text)}
+.count b{color:var(--gold);font-size:1.35rem}
+.bar{width:min(260px,80%);height:8px;border-radius:99px;background:color-mix(in srgb,var(--deep) 85%,transparent);border:1px solid var(--line);overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--sky),var(--pink),var(--gold));border-radius:99px;transition:width 1s cubic-bezier(.2,1,.3,1);box-shadow:0 0 12px var(--pink)}
+.reserve{font-size:.78rem;color:var(--soft)}
+
+.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:14px 2px 4px;margin-inline:-2px;scroll-snap-type:x proximity}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;scroll-snap-align:start;display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:color-mix(in srgb,var(--deep) 85%,transparent);border-radius:999px;padding:7px 12px 7px 8px;font-weight:700;font-size:.85rem;max-width:220px}
+.chip span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip .ring{--p:0;width:22px;height:22px;border-radius:50%;flex:none;background:conic-gradient(var(--gold) calc(var(--p)*1turn),color-mix(in srgb,var(--line) 70%,transparent) 0);display:grid;place-items:center}
+.chip .ring::after{content:"";width:14px;height:14px;border-radius:50%;background:var(--deep)}
+.chip[aria-pressed="true"]{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 14%,var(--deep));box-shadow:0 0 14px color-mix(in srgb,var(--gold) 35%,transparent)}
+.chip.add{color:var(--gold);padding:7px 14px;border-style:dashed}
+
+/* ---------- tâches ---------- */
+.section-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:22px 2px 10px}
+.section-head h3{margin:0;font-family:var(--display);font-size:.95rem;letter-spacing:.12em;text-transform:uppercase;color:var(--soft)}
+.link{border:0;background:none;color:var(--sky);font-weight:700;font-size:.85rem;padding:4px}
+.tasks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.task{position:relative;display:flex;align-items:center;gap:10px;text-align:left;min-height:64px;padding:10px 12px;border-radius:18px;border:1px solid var(--line);background:linear-gradient(160deg,color-mix(in srgb,var(--panel) 92%,transparent),color-mix(in srgb,var(--deep) 92%,transparent));overflow:hidden;transition:transform .12s,border-color .2s}
+.task::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,color-mix(in srgb,var(--text) 14%,transparent) 50%,transparent 70%);transform:translateX(-120%);transition:transform .6s}
+.task:active{transform:scale(.96)}
+.task:hover{border-color:color-mix(in srgb,var(--pink) 60%,var(--line))}
+.task.hit::after{transform:translateX(120%)}
+.task .ico{flex:none;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,var(--pink) 16%,transparent);color:var(--pink)}
+.task .ico svg{width:22px;height:22px}
+.task .lbl{min-width:0;display:flex;flex-direction:column}
+.task .lbl b{font-weight:800;font-size:.95rem;overflow-wrap:anywhere;line-height:1.15}
+.task .lbl span{font-size:.78rem;font-weight:800;color:var(--gold);font-variant-numeric:tabular-nums}
+.editing .task{border-style:dashed}
+.editing .task .lbl span::after{content:" · modifier";color:var(--soft);font-weight:700}
+.task.new{justify-content:center;color:var(--sky);font-weight:800;border-style:dashed}
+
+.log{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.log li{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px solid color-mix(in srgb,var(--line) 55%,transparent);font-size:.9rem}
+.log li:last-child{border-bottom:0}
+.log time{font-variant-numeric:tabular-nums;color:var(--dim);font-size:.78rem;width:42px;flex:none}
+.log .n{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.log .v{color:var(--gold);font-weight:800;font-variant-numeric:tabular-nums}
+.empty-line{color:var(--dim);font-size:.88rem;padding:8px 4px}
+
+/* ---------- constellation ---------- */
+.sky-box{position:relative;width:100%;aspect-ratio:1;max-width:100%;border-radius:24px;border:1px solid var(--line);background:radial-gradient(circle at 50% 40%,color-mix(in srgb,#5b45d8 30%,var(--deep)),var(--night) 75%);overflow:hidden;margin-top:8px}
+.sky-box svg{position:absolute;inset:0;width:100%;height:100%}
+.sky-empty{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:24px;color:var(--soft);font-size:.92rem}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:14px}
+.stat{border:1px solid var(--line);border-radius:16px;padding:10px;background:color-mix(in srgb,var(--deep) 85%,transparent);display:flex;flex-direction:column;gap:2px;min-width:0}
+.stat b{font-size:1.3rem;font-weight:800;color:var(--gold);font-variant-numeric:tabular-nums}
+.stat span{font-size:.72rem;color:var(--soft);font-weight:700}
+.done-list{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.done-list li{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;background:color-mix(in srgb,var(--deep) 80%,transparent);border:1px solid color-mix(in srgb,var(--line) 70%,transparent)}
+.done-list .st{flex:none;color:var(--gold)}
+.done-list .st svg{width:20px;height:20px}
+.done-list .t{flex:1;min-width:0;display:flex;flex-direction:column}
+.done-list .t b{overflow-wrap:anywhere}
+.done-list .t span{font-size:.76rem;color:var(--soft)}
+
+/* ---------- barre du bas ---------- */
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;justify-content:center;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));padding-top:12px;background:linear-gradient(transparent,var(--night) 45%)}
+.nav-in{display:flex;gap:4px;padding:5px;border-radius:999px;border:1px solid var(--line);background:color-mix(in srgb,var(--deep) 88%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.nav button{display:flex;align-items:center;gap:8px;border:0;background:none;color:var(--soft);font-weight:800;padding:10px 18px;border-radius:999px;font-size:.88rem}
+.nav button svg{width:18px;height:18px}
+.nav button[aria-selected="true"]{background:linear-gradient(135deg,color-mix(in srgb,var(--pink) 75%,var(--panel)),color-mix(in srgb,#8a6bff 80%,var(--panel)));color:var(--text);box-shadow:0 0 18px color-mix(in srgb,var(--pink) 45%,transparent)}
+
+/* ---------- feuilles ---------- */
+.sheet-wrap{position:fixed;inset:0;z-index:70;background:color-mix(in srgb,var(--night) 70%,transparent);display:flex;align-items:flex-end;justify-content:center}
+.sheet{width:100%;max-width:520px;box-sizing:border-box;max-height:88vh;overflow-y:auto;background:linear-gradient(180deg,var(--panel),var(--deep));border:1px solid var(--line);border-bottom:0;border-radius:26px 26px 0 0;padding:22px max(18px,env(safe-area-inset-right,0px)) calc(22px + env(safe-area-inset-bottom,0px)) max(18px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:14px;animation:up .35s cubic-bezier(.2,1,.3,1)}
+@keyframes up{from{transform:translateY(40px);opacity:0}}
+.sheet h3{margin:0;font-family:var(--display);font-size:1.25rem;letter-spacing:.04em}
+.sheet p{margin:0;color:var(--soft);font-size:.9rem}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;font-weight:800;color:var(--soft)}
+.input{width:100%;box-sizing:border-box;background:var(--night);border:1px solid var(--line);border-radius:14px;padding:12px 14px;color:var(--text)}
+.input::placeholder{color:var(--dim)}
+.sizes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.size{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:4px;padding:12px 8px;border-radius:16px;border:1px solid var(--line);background:var(--night);text-align:center}
+.size .pv{height:58px;display:flex;align-items:flex-end;justify-content:center}
+.size svg{width:auto}
+.size b{font-weight:800;font-size:.9rem}
+.size span{font-size:.74rem;color:var(--soft)}
+.size[aria-pressed="true"]{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset,0 0 18px color-mix(in srgb,var(--gold) 30%,transparent)}
+.values{display:flex;gap:8px}
+.values button{flex:1;padding:10px 0;border-radius:12px;border:1px solid var(--line);background:var(--night);font-weight:800;color:var(--gold)}
+.values button[aria-pressed="true"]{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 16%,var(--night))}
+.icons{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
+.icons button{aspect-ratio:1;border-radius:12px;border:1px solid var(--line);background:var(--night);color:var(--pink);display:grid;place-items:center;padding:0}
+.icons button svg{width:22px;height:22px}
+.icons button[aria-pressed="true"]{border-color:var(--pink);background:color-mix(in srgb,var(--pink) 16%,var(--night))}
+.row-btns{display:flex;gap:8px;flex-wrap:wrap}
+.sugg{display:flex;flex-wrap:wrap;gap:6px}
+.sg{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--night);border-radius:999px;padding:6px 10px 6px 7px;font-weight:700;font-size:.82rem}
+.sg span{display:grid;place-items:center;color:var(--pink)}
+.sg span svg{width:16px;height:16px}
+.sg b{color:var(--gold);font-size:.75rem}
+.sg[aria-pressed="true"]{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 16%,var(--night))}
+.sg[aria-pressed="true"]::after{content:"✓";color:var(--gold);font-weight:800}
+.btn{flex:1;min-width:120px;border:1px solid var(--line);background:var(--night);border-radius:999px;padding:12px 18px;font-weight:800}
+.btn.main{border:0;color:var(--night);background:linear-gradient(135deg,var(--gold),var(--pink));box-shadow:0 0 22px color-mix(in srgb,var(--pink) 40%,transparent)}
+.btn.danger{color:var(--pink);border-color:color-mix(in srgb,var(--pink) 60%,var(--line))}
+.btn:disabled{opacity:.45}
+
+.reveal{text-align:center;align-items:center}
+.reveal .big{font-family:var(--display);font-size:1.7rem;line-height:1.15;text-wrap:balance;background:linear-gradient(90deg,var(--gold),var(--pink),var(--sky));-webkit-background-clip:text;background-clip:text;color:transparent;overflow-wrap:anywhere}
+.reveal svg{width:110px;height:auto;filter:drop-shadow(0 0 20px color-mix(in srgb,var(--gold) 60%,transparent))}
+
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:65;background:var(--text);color:var(--night);font-weight:800;padding:10px 18px;border-radius:999px;font-size:.88rem;max-width:calc(100% - 32px);box-sizing:border-box;text-align:center;display:flex;gap:12px;align-items:center}
+.toast button{border:0;background:none;color:#6a3fd9;font-weight:800;padding:0}
+
+@media (prefers-reduced-motion:reduce){
+  .wave,.wave2,.twinkle,.pouch-wrap::before,#pouchSvg.bump{animation:none}
+  #fillGroup,.bar i{transition:none}
+}
+</style>
+
+</head>
+<body>
+<canvas id="sky" aria-hidden="true"></canvas>
+<div class="nebula" aria-hidden="true"></div>
+
+<div class="app">
+  <div class="top">
+    <h1 class="brand">Poussière d'Étoiles</h1>
+    <div class="wallet" title="Poussière récoltée au total"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1.5l2.6 7.1 7.4.3-5.8 4.6 2 7.2L12 16.6 5.8 20.7l2-7.2L2 8.9l7.4-.3z"/></svg><span id="total">0</span></div>
+  </div>
+
+  <section id="view-pouches">
+    <div class="stage">
+      <div class="pouch-wrap"><svg id="pouchSvg" viewBox="0 0 200 230" role="img" aria-label="Bourse de poussière d'étoiles"></svg></div>
+      <div class="reward">
+        <small id="sizeName">Bourse</small>
+        <h2 id="rewardName">Ma récompense</h2>
+        <div class="count"><b id="filled">0</b> / <span id="cap">0</span> éclats</div>
+      </div>
+      <div class="bar"><i id="barFill"></i></div>
+      <div class="reserve" id="reserve" hidden></div>
+    </div>
+
+    <div class="chips" id="chips"></div>
+
+    <div class="section-head"><h3>Tâches</h3><button class="link" id="editTasks">Modifier</button></div>
+    <div class="tasks" id="tasks"></div>
+
+    <div class="section-head"><h3>Aujourd'hui</h3><span class="reserve" id="todaySum"></span></div>
+    <ul class="log" id="log"></ul>
+  </section>
+
+  <section id="view-sky" hidden>
+    <div class="section-head" style="margin-top:12px"><h3>Ma constellation</h3></div>
+    <div class="sky-box" id="skyBox"></div>
+    <div class="stats">
+      <div class="stat"><b id="stDone">0</b><span>bourses remplies</span></div>
+      <div class="stat"><b id="stTasks">0</b><span>tâches faites</span></div>
+      <div class="stat"><b id="stDust">0</b><span>éclats récoltés</span></div>
+    </div>
+    <ul class="done-list" id="doneList"></ul>
+  </section>
+</div>
+
+<nav class="nav"><div class="nav-in" role="tablist">
+  <button id="tab-pouches" role="tab" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M8 5c1.5 1.2 6.5 1.2 8 0M9 6.5C6 8.5 4 12 4.5 16c.4 3.3 3.7 5 7.5 5s7.1-1.7 7.5-5c.5-4-1.5-7.5-4.5-9.5M8.5 3.5c1 1 6 1 7 0"/></svg>Bourses</button>
+  <button id="tab-sky" role="tab" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 18l5-9 5 4 4-8"/><circle cx="5" cy="18" r="1.6" fill="currentColor"/><circle cx="10" cy="9" r="1.6" fill="currentColor"/><circle cx="15" cy="13" r="1.6" fill="currentColor"/><circle cx="19" cy="5" r="1.6" fill="currentColor"/></svg>Constellation</button>
+</div></nav>
+
+<canvas id="fx" aria-hidden="true"></canvas>
+<div class="sheet-wrap" id="sheetWrap" hidden><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const buzz = p => { try { navigator.vibrate && navigator.vibrate(p); } catch {} };
+
+/* ---------- données ---------- */
+const SIZES = [
+  { key:"s",  name:"Petite bourse",  cap:10,  hint:"un petit plaisir",   w:150, pw:"38px" },
+  { key:"m",  name:"Bourse",         cap:25,  hint:"un plaisir moyen",   w:180, pw:"44px" },
+  { key:"l",  name:"Grand sac",      cap:50,  hint:"un gros plaisir",    w:212, pw:"50px" },
+  { key:"xl", name:"Coffre céleste", cap:100, hint:"un très grand plaisir", w:240, pw:"56px" }
+];
+const sizeOf = k => SIZES.find(s => s.key === k) || SIZES[0];
+
+const ICONS = {
+  dish:'<path d="M4 13h16a8 8 0 01-16 0zM12 5v3M8 6.5l1 2M16 6.5l-1 2"/>',
+  broom:'<path d="M14 3l-4 9M7 12h7l3 8H4z M9 16v4M12 16v4"/>',
+  cart:'<path d="M3 4h2l2.5 11h10L20 7H6.5"/><circle cx="9" cy="19" r="1.4"/><circle cx="17" cy="19" r="1.4"/>',
+  shirt:'<path d="M8 4l4 2 4-2 4 4-3 3v9H7v-9L4 8z"/>',
+  box:'<path d="M4 8l8-4 8 4v9l-8 4-8-4zM4 8l8 4 8-4M12 12v9"/>',
+  pan:'<path d="M3 12h13a0 0 0 010 0 6.5 6.5 0 01-13 0zM16 12h5"/><path d="M8 4c0 2 2 2 2 4M12 4c0 2 2 2 2 4"/>',
+  dance:'<circle cx="13" cy="4.5" r="2"/><path d="M13 7l-2 6 4 3v5M11 13l-4 3M13 9l5 2M12 9l-5-1"/>',
+  paper:'<path d="M6 3h9l4 4v14H6zM14 3v5h5M9 12h7M9 16h7"/>',
+  plant:'<path d="M12 21v-9M12 12c0-4 3-6 7-6 0 4-3 6-7 6zM12 15c0-3-2.5-5-6-5 0 3 2.5 5 6 5z"/>',
+  dog:'<path d="M5 9l2-5 3 3h4l3-3 2 5v5a7 7 0 01-14 0z"/><circle cx="9.5" cy="12" r=".8"/><circle cx="14.5" cy="12" r=".8"/><path d="M11 16h2"/>',
+  bed:'<path d="M3 18V7M3 14h18v4M21 14v-2a3 3 0 00-3-3h-7v5"/><circle cx="7" cy="11" r="1.6"/>',
+  trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',
+  vacuum:'<path d="M5 20h6a3 3 0 000-6H8l-3 6zM9 14V6a3 3 0 016 0v1M15 7l4 2"/><circle cx="6.5" cy="20" r="1"/>',
+  bath:'<path d="M4 12h16v2a5 5 0 01-5 5H9a5 5 0 01-5-5zM6 12V6a2 2 0 014 0M7 19l-1 2M17 19l1 2"/>',
+  drop:'<path d="M12 3c3 4.5 6 7.5 6 11a6 6 0 01-12 0c0-3.5 3-6.5 6-11z"/>',
+  moon:'<path d="M20 14.5A8 8 0 019.5 4 8 8 0 1020 14.5z"/>',
+  glass:'<path d="M6 3h12l-1.5 17a1 1 0 01-1 1h-7a1 1 0 01-1-1zM6.5 9h11"/>',
+  phone:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a1 1 0 01-1 1A16 16 0 014 5a1 1 0 011-1z"/>',
+  lotus:'<path d="M12 20c-4 0-8-2-9-6 3 0 6 1 9 4 3-3 6-4 9-4-1 4-5 6-9 6zM12 18c-2-3-2-7 0-11 2 4 2 8 0 11z"/>',
+  apple:'<path d="M12 7c-2-1.5-7-1-7 5 0 4 3 8 5 8 1 0 1.3-.5 2-.5s1 .5 2 .5c2 0 5-4 5-8 0-6-5-6.5-7-5zM12 7c0-2 1-3.5 3-4"/>',
+  car:'<path d="M3 16v-4l2-5h14l2 5v4zM3 12h18"/><circle cx="7" cy="16.5" r="1.8"/><circle cx="17" cy="16.5" r="1.8"/>',
+  book:'<path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2zM4 5v16M8 7h7"/>',
+  card:'<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18M7 15h4"/>',
+  walk:'<circle cx="13" cy="4.5" r="2"/><path d="M11 21l2-6-2-3 1-4 4 3 3 1M12 8l-4 2-1 4M13 15l3 2 1 4"/>',
+  spark:'<path d="M12 3l1.8 6.2L20 11l-6.2 1.8L12 19l-1.8-6.2L4 11l6.2-1.8z"/>'
+};
+const CATALOG = [
+  { cat:"Maison", items:[["Vaisselle","dish",1],["Ménage","broom",2],["Aspirateur","vacuum",2],["Salle de bain","bath",2],["Rangement","box",1],["Lessive","shirt",1],["Étendre le linge","shirt",1],["Plier le linge","shirt",1],["Faire le lit","bed",1],["Changer les draps","bed",2],["Sortir les poubelles","trash",1],["Cuisiner","pan",2],["Arroser les plantes","plant",1]] },
+  { cat:"Courses et papiers", items:[["Courses","cart",2],["Papiers","paper",3],["Payer une facture","card",2],["Passer un appel","phone",2],["Prendre un rendez-vous","phone",2],["Laver la voiture","car",3],["Plein d'essence","car",1]] },
+  { cat:"Prendre soin de moi", items:[["Sport / danse","dance",2],["Marcher dehors","walk",2],["Douche","drop",1],["Boire assez d'eau","glass",1],["Repas équilibré","apple",1],["Séance de sophro","lotus",2],["Lire","book",1],["Coucher avant minuit","moon",2]] },
+  { cat:"Animaux et dehors", items:[["Sortir le chien","dog",1],["Nourrir le chien","dog",1],["Brosser le chien","dog",1],["Jardin","plant",2]] }
+];
+const icon = k => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${ICONS[k] || ICONS.spark}</svg>`;
+const STAR = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1.5l2.6 7.1 7.4.3-5.8 4.6 2 7.2L12 16.6 5.8 20.7l2-7.2L2 8.9l7.4-.3z"/></svg>';
+
+const DEFAULT_TASKS = [
+  { name:"Vaisselle", icon:"dish", value:1 }, { name:"Ménage", icon:"broom", value:2 },
+  { name:"Courses", icon:"cart", value:2 }, { name:"Lessive", icon:"shirt", value:1 },
+  { name:"Rangement", icon:"box", value:1 }, { name:"Cuisiner", icon:"pan", value:2 },
+  { name:"Aspirateur", icon:"vacuum", value:2 }, { name:"Salle de bain", icon:"bath", value:2 },
+  { name:"Sortir les poubelles", icon:"trash", value:1 }, { name:"Faire le lit", icon:"bed", value:1 },
+  { name:"Sortir le chien", icon:"dog", value:1 }, { name:"Sport / danse", icon:"dance", value:2 },
+  { name:"Papiers", icon:"paper", value:3 }, { name:"Passer un appel", icon:"phone", value:2 }
+];
+const TASKS_V = 2;
+const KEY = "poussiere.v1";
+let S;
+function fresh() {
+  const p = { id: uid(), reward: "Un bubble tea", size: "s", filled: 0, created: Date.now() };
+  return { pouches:[p], done:[], activeId:p.id, tasks: DEFAULT_TASKS.map(t => ({ id: uid(), ...t })), tasksV: TASKS_V, log:[], total:0, reserve:0 };
+}
+function load() {
+  try {
+    const r = JSON.parse(localStorage.getItem(KEY));
+    if (r && Array.isArray(r.pouches) && Array.isArray(r.tasks)) {
+      if ((r.tasksV || 1) < TASKS_V) {
+        const have = new Set(r.tasks.map(t => t.name.toLowerCase()));
+        for (const t of DEFAULT_TASKS) if (!have.has(t.name.toLowerCase())) r.tasks.push({ id: uid(), ...t });
+        r.tasksV = TASKS_V;
+      }
+      return r;
+    }
+  } catch {}
+  return fresh();
+}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch {} }
+S = load();
+const active = () => S.pouches.find(p => p.id === S.activeId) || S.pouches[0] || null;
+
+/* ---------- ciel ---------- */
+const sky = $("sky"), sctx = sky.getContext("2d");
+let stars = [];
+function sizeSky() {
+  const d = Math.min(devicePixelRatio || 1, 2);
+  sky.width = innerWidth * d; sky.height = innerHeight * d; sctx.setTransform(d, 0, 0, d, 0, 0);
+  const n = Math.round(innerWidth * innerHeight / 3800);
+  stars = Array.from({ length: n }, () => ({ x: Math.random() * innerWidth, y: Math.random() * innerHeight, r: Math.random() * 1.3 + .3, p: Math.random() * 6.28, s: Math.random() * .8 + .3, c: Math.random() < .15 ? "255,213,126" : Math.random() < .3 ? "255,146,210" : "236,232,255" }));
+  if (reduce) drawSky(0);
+}
+function drawSky(t) {
+  sctx.clearRect(0, 0, innerWidth, innerHeight);
+  for (const s of stars) {
+    const a = reduce ? .7 : .35 + .65 * (0.5 + 0.5 * Math.sin(s.p + t / 1000 * s.s));
+    sctx.fillStyle = `rgba(${s.c},${a})`; sctx.beginPath(); sctx.arc(s.x, s.y, s.r, 0, 6.283); sctx.fill();
+  }
+}
+addEventListener("resize", () => { sizeSky(); sizeFx(); });
+
+/* ---------- particules ---------- */
+const fx = $("fx"), fctx = fx.getContext("2d");
+let parts = [], running = false;
+function sizeFx() { const d = Math.min(devicePixelRatio || 1, 2); fx.width = innerWidth * d; fx.height = innerHeight * d; fctx.setTransform(d, 0, 0, d, 0, 0); }
+const COLORS = ["255,213,126", "255,146,210", "147,220,255", "245,241,255"];
+function drawSpark(x, y, r, col, a) {
+  fctx.save(); fctx.translate(x, y);
+  const g = fctx.createRadialGradient(0, 0, 0, 0, 0, r * 4);
+  g.addColorStop(0, `rgba(${col},${a * .9})`); g.addColorStop(1, `rgba(${col},0)`);
+  fctx.fillStyle = g; fctx.beginPath(); fctx.arc(0, 0, r * 4, 0, 6.283); fctx.fill();
+  fctx.fillStyle = `rgba(255,255,255,${a})`; fctx.beginPath();
+  for (let i = 0; i < 8; i++) { const ang = i * Math.PI / 4, rr = i % 2 ? r * .35 : r * 1.6; fctx.lineTo(Math.cos(ang) * rr, Math.sin(ang) * rr); }
+  fctx.closePath(); fctx.fill(); fctx.restore();
+}
+function loop(t) {
+  if (!reduce) drawSky(t);
+  fctx.clearRect(0, 0, innerWidth, innerHeight);
+  const now = performance.now();
+  parts = parts.filter(p => {
+    const k = (now - p.t0) / p.dur;
+    if (k < 0) return true;
+    if (p.kind === "fly") {
+      if (k >= 1) { p.done && p.done(); return false; }
+      const e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2, u = 1 - e;
+      const x = u * u * p.x0 + 2 * u * e * p.cx + e * e * p.x1, y = u * u * p.y0 + 2 * u * e * p.cy + e * e * p.y1;
+      p.trail.push([x, y]); if (p.trail.length > 7) p.trail.shift();
+      p.trail.forEach(([tx, ty], i) => drawSpark(tx, ty, p.r * (i + 1) / 9, p.col, .12 * (i + 1) / 7));
+      drawSpark(x, y, p.r, p.col, 1 - k * .2);
+      return true;
+    }
+    if (k >= 1) return false;
+    const x = p.x0 + p.vx * k * p.dur / 16, y = p.y0 + p.vy * k * p.dur / 16 + 0.0004 * Math.pow(k * p.dur, 2) * p.g;
+    drawSpark(x, y, p.r * (1 - k * .5), p.col, 1 - k);
+    return true;
+  });
+  if (parts.length || !reduce) requestAnimationFrame(loop); else { running = false; fctx.clearRect(0, 0, innerWidth, innerHeight); }
+}
+function kick() { if (!running) { running = true; requestAnimationFrame(loop); } }
+function pouchMouth() { const r = $("pouchSvg").getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height * .3 }; }
+function flyFrom(el, count, onArrive) {
+  const r = el.getBoundingClientRect(), m = pouchMouth(), n = Math.min(count, 40);
+  if (reduce) { setTimeout(onArrive, 50); return; }
+  let left = n;
+  for (let i = 0; i < n; i++) {
+    const x0 = r.left + r.width * (.2 + Math.random() * .6), y0 = r.top + r.height * (.2 + Math.random() * .6);
+    const side = Math.random() < .5 ? -1 : 1;
+    parts.push({ kind:"fly", t0: performance.now() + i * 28, dur: 650 + Math.random() * 450, x0, y0, x1: m.x + (Math.random() - .5) * 26, y1: m.y + Math.random() * 10,
+      cx: (x0 + m.x) / 2 + side * (60 + Math.random() * 90), cy: Math.min(y0, m.y) - 40 - Math.random() * 90, r: 2 + Math.random() * 2.2, col: COLORS[i % 4], trail: [],
+      done: () => { if (--left === 0) onArrive(); } });
+  }
+  kick();
+}
+function burst(x, y, n = 70) {
+  if (reduce) return;
+  for (let i = 0; i < n; i++) {
+    const a = Math.random() * 6.283, sp = 1.5 + Math.random() * 4.5;
+    parts.push({ kind:"burst", t0: performance.now() + Math.random() * 120, dur: 900 + Math.random() * 700, x0: x, y0: y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 2, g: 1, r: 1.5 + Math.random() * 2.5, col: COLORS[i % 4] });
+  }
+  kick();
+}
+
+/* ---------- dessin de la bourse ---------- */
+function pouchSVG(level, opts = {}) {
+  const top = 70, bottom = 218, h = bottom - top;
+  const y = (1 - Math.max(0, Math.min(1, level))) * h;
+  const id = opts.id || "p";
+  let dots = "";
+  if (!opts.mini) {
+    const rnd = mulberry(7);
+    for (let i = 0; i < 26; i++) { const cx = 35 + rnd() * 130, cy = 80 + rnd() * 130, r = .8 + rnd() * 1.8; dots += `<circle class="twinkle" style="animation-delay:${(rnd() * 2.4).toFixed(2)}s" cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${r.toFixed(1)}" fill="#fff"/>`; }
+  }
+  const body = "M62 66 C38 84 16 124 20 170 C24 206 66 220 100 220 C134 220 176 206 180 170 C184 124 162 84 138 66 Z";
+  return `<defs>
+    <clipPath id="${id}c"><path d="${body}"/></clipPath>
+    <linearGradient id="${id}f" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#8a6bff"/><stop offset=".45" stop-color="#ff92d2"/><stop offset="1" stop-color="#ffd57e"/></linearGradient>
+    <linearGradient id="${id}b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a2170"/><stop offset="1" stop-color="#140f3a"/></linearGradient>
+    <linearGradient id="${id}r" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffe6a8"/><stop offset=".5" stop-color="#ffd57e"/><stop offset="1" stop-color="#e8a94a"/></linearGradient>
+    <filter id="${id}g" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <path d="${body}" fill="url(#${id}b)" stroke="#5a4bc0" stroke-width="2"/>
+  <g clip-path="url(#${id}c)">
+    <g id="${opts.mini ? "" : "fillGroup"}" style="transform:translateY(${y}px)">
+      <g class="${opts.mini ? "" : "wave2"}"><path d="M-80 ${top + 4} q20 -8 40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 V 300 H -80 Z" fill="#ff92d2" opacity=".55"/></g>
+      <g class="${opts.mini ? "" : "wave"}"><path d="M-80 ${top + 8} q20 -9 40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 V 300 H -80 Z" fill="url(#${id}f)"/></g>
+      ${dots}
+    </g>
+    <path d="M40 90 C34 120 34 160 46 190" stroke="#fff" stroke-opacity=".18" stroke-width="7" fill="none" stroke-linecap="round"/>
+  </g>
+  <path d="M70 46 Q100 58 130 46 L138 66 Q100 80 62 66 Z" fill="url(#${id}b)" stroke="#5a4bc0" stroke-width="2"/>
+  <path d="M64 20 Q76 34 100 26 Q124 34 136 20 L130 46 Q100 58 70 46 Z" fill="#2a2170" stroke="#5a4bc0" stroke-width="2"/>
+  <path d="M62 60 Q100 74 138 60" stroke="url(#${id}r)" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <g filter="url(#${id}g)" transform="translate(100 64)">
+    <path d="M0 0 C-14 -14 -30 -8 -24 2 C-20 9 -8 6 0 0 C8 6 20 9 24 2 C30 -8 14 -14 0 0 Z" fill="url(#${id}r)"/>
+    <path d="M0 -9 l2.6 6.4 6.6 .4 -5.1 4.2 1.7 6.6 -5.8 -3.7 -5.8 3.7 1.7 -6.6 -5.1 -4.2 6.6 -.4 z" fill="#fff8e6"/>
+  </g>`;
+}
+function mulberry(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+/* ---------- rendu ---------- */
+let editing = false;
+function renderPouch(animate) {
+  const p = active(), svg = $("pouchSvg");
+  if (!p) {
+    svg.innerHTML = pouchSVG(0); svg.style.setProperty("--pw", "170px");
+    $("sizeName").textContent = "Aucune bourse"; $("rewardName").textContent = "Crée ta première bourse";
+    $("filled").textContent = "0"; $("cap").textContent = "0"; $("barFill").style.width = "0";
+    return;
+  }
+  const sz = sizeOf(p.size), lvl = p.filled / sz.cap;
+  if (!svg.dataset.pid || svg.dataset.pid !== p.id || !$("fillGroup")) { svg.innerHTML = pouchSVG(animate ? Math.max(0, lvl - .0001) : lvl); svg.dataset.pid = p.id; }
+  svg.style.setProperty("--pw", sz.w + "px");
+  requestAnimationFrame(() => { const fg = $("fillGroup"); if (fg) fg.style.transform = `translateY(${(1 - Math.min(1, lvl)) * 148}px)`; });
+  $("sizeName").textContent = `${sz.name} · ${sz.hint}`;
+  $("rewardName").textContent = p.reward;
+  $("filled").textContent = p.filled; $("cap").textContent = sz.cap;
+  $("barFill").style.width = Math.min(100, lvl * 100) + "%";
+  const r = $("reserve"); r.hidden = !S.reserve; r.textContent = S.reserve ? `+${S.reserve} éclats en réserve pour la prochaine bourse` : "";
+}
+function renderChips() {
+  $("chips").innerHTML = S.pouches.map(p => { const sz = sizeOf(p.size); return `<button class="chip" data-p="${p.id}" aria-pressed="${p.id === S.activeId}"><i class="ring" style="--p:${(p.filled / sz.cap).toFixed(3)}"></i><span>${esc(p.reward)}</span></button>`; }).join("")
+    + `<button class="chip add" id="addPouch">+ Nouvelle bourse</button>`;
+}
+function renderTasks() {
+  $("tasks").classList.toggle("editing", editing);
+  $("editTasks").textContent = editing ? "Terminé" : "Modifier";
+  $("tasks").innerHTML = S.tasks.map(t => `<button class="task" data-t="${t.id}"><span class="ico">${icon(t.icon)}</span><span class="lbl"><b>${esc(t.name)}</b><span>+${t.value} éclat${t.value > 1 ? "s" : ""}</span></span></button>`).join("")
+    + (editing ? `<button class="task new" id="newTask">+ Nouvelle tâche</button>` : "");
+}
+const isToday = ts => new Date(ts).toDateString() === new Date().toDateString();
+function renderLog() {
+  const today = S.log.filter(l => isToday(l.at));
+  $("todaySum").textContent = today.length ? `${today.reduce((s, l) => s + l.value, 0)} éclats` : "";
+  $("log").innerHTML = today.length ? today.slice().reverse().slice(0, 12).map(l => `<li><time>${new Date(l.at).toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" })}</time><span class="n">${esc(l.name)}</span><span class="v">+${l.value}</span></li>`).join("")
+    : `<li class="empty-line">Rien encore aujourd'hui. Touche une tâche quand tu l'as faite.</li>`;
+  $("total").textContent = S.total;
+}
+function renderSky() {
+  const box = $("skyBox");
+  const done = S.done;
+  $("stDone").textContent = done.length; $("stTasks").textContent = S.log.length; $("stDust").textContent = S.total;
+  if (!done.length) {
+    box.innerHTML = `<div class="sky-empty">Chaque bourse remplie devient une étoile ici.<br>Remplis ta première pour allumer ta constellation.</div>`;
+    $("doneList").innerHTML = ""; return;
+  }
+  const pts = done.map((d, i) => { const r = mulberry(i * 977 + 13); return { x: 12 + r() * 76, y: 12 + r() * 76, d }; });
+  const line = pts.map(p => `${p.x},${p.y}`).join(" ");
+  box.innerHTML = `<svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+    <polyline points="${line}" fill="none" stroke="#bcb3ea" stroke-opacity=".35" stroke-width=".35" stroke-dasharray="1 1"/>
+    ${pts.map((p, i) => { const s = { s:1.6, m:2.2, l:2.9, xl:3.7 }[p.d.size] || 2; return `<g transform="translate(${p.x} ${p.y})"><circle r="${s * 2.4}" fill="#ffd57e" opacity=".14"/><path transform="scale(${s / 10})" d="M0 -10 L2.4 -2.4 L10 0 L2.4 2.4 L0 10 L-2.4 2.4 L-10 0 L-2.4 -2.4 Z" fill="${i % 3 === 1 ? "#ff92d2" : i % 3 === 2 ? "#93dcff" : "#ffd57e"}"/></g>`; }).join("")}
+  </svg>`;
+  $("doneList").innerHTML = done.slice().reverse().map(d => `<li><span class="st">${STAR}</span><span class="t"><b>${esc(d.reward)}</b><span>${sizeOf(d.size).name} · ${sizeOf(d.size).cap} éclats · ${new Date(d.doneAt).toLocaleDateString("fr-FR", { day:"numeric", month:"long" })}</span></span></li>`).join("");
+}
+function renderAll() { renderPouch(false); renderChips(); renderTasks(); renderLog(); }
+
+/* ---------- actions ---------- */
+let pendingFull = null;
+function doTask(t, el) {
+  const p = active();
+  if (!p) { pouchSheet(); return; }
+  el.classList.remove("hit"); void el.offsetWidth; el.classList.add("hit");
+  buzz(12);
+  const entry = { id: uid(), taskId: t.id, name: t.name, value: t.value, pouchId: p.id, at: Date.now(), spill: 0 };
+  const cap = sizeOf(p.size).cap, room = cap - p.filled, add = Math.min(room, t.value);
+  p.filled += add; entry.spill = t.value - add;
+  S.total += t.value; S.log.push(entry);
+  if (S.log.length > 2000) S.log.splice(0, S.log.length - 2000);
+  if (entry.spill > 0) {
+    const next = S.pouches.find(x => x.id !== p.id && x.filled < sizeOf(x.size).cap);
+    if (next) { const r2 = sizeOf(next.size).cap - next.filled; const a2 = Math.min(r2, entry.spill); next.filled += a2; entry.spillTo = next.id; entry.spillAmt = a2; S.reserve += entry.spill - a2; }
+    else S.reserve += entry.spill;
+  }
+  save(); renderLog(); renderChips();
+  flyFrom(el, t.value * 7, () => {
+    renderPouch(true);
+    const svg = $("pouchSvg"); svg.classList.remove("bump"); void svg.getBoundingClientRect(); svg.classList.add("bump");
+    if (p.filled >= cap) { pendingFull = p.id; setTimeout(() => fullReveal(p), 700); }
+  });
+  showToast(`+${t.value} éclat${t.value > 1 ? "s" : ""} · ${t.name}`, () => undo(entry.id));
+}
+function undo(entryId) {
+  const i = S.log.findIndex(l => l.id === entryId); if (i < 0) return;
+  const e = S.log[i], p = S.pouches.find(x => x.id === e.pouchId);
+  if (!p) { showToast("Cette bourse est déjà ouverte, impossible d'annuler"); return; }
+  p.filled = Math.max(0, p.filled - (e.value - e.spill));
+  if (e.spillTo) { const n = S.pouches.find(x => x.id === e.spillTo); if (n) n.filled = Math.max(0, n.filled - e.spillAmt); }
+  S.reserve = Math.max(0, S.reserve - (e.spill - (e.spillAmt || 0)));
+  S.total = Math.max(0, S.total - e.value); S.log.splice(i, 1);
+  if (pendingFull === p.id) { pendingFull = null; closeSheet(); }
+  save(); renderAll(); showToast("Annulé");
+}
+function fullReveal(p) {
+  if (pendingFull !== p.id) return;
+  const m = pouchMouth(); burst(m.x, m.y + 40, 90); buzz([20, 40, 20, 40, 60]);
+  openSheet(`<div class="reveal" style="display:flex;flex-direction:column;gap:12px">
+    <svg viewBox="0 0 200 230">${pouchSVG(1, { id:"rv", mini:true })}</svg>
+    <p style="letter-spacing:.2em;text-transform:uppercase;font-weight:800;font-size:.72rem">${esc(sizeOf(p.size).name)} remplie</p>
+    <div class="big">${esc(p.reward)}</div>
+    <p>Tu as récolté ${sizeOf(p.size).cap} éclats. Ta récompense t'attend.</p>
+    <div class="row-btns" style="width:100%"><button class="btn main" id="claim">Je m'accorde ma récompense</button></div>
+    <button class="link" id="later">Plus tard</button>
+  </div>`, () => {
+    $("claim").onclick = () => claim(p.id);
+    $("later").onclick = () => { pendingFull = null; closeSheet(); };
+  });
+}
+function claim(pid) {
+  const i = S.pouches.findIndex(x => x.id === pid); if (i < 0) return;
+  const p = S.pouches[i];
+  S.done.push({ id: p.id, reward: p.reward, size: p.size, doneAt: Date.now() });
+  S.pouches.splice(i, 1);
+  S.activeId = (S.pouches.find(x => x.filled < sizeOf(x.size).cap) || S.pouches[0] || {}).id || null;
+  pendingFull = null; save(); closeSheet(); renderAll();
+  burst(innerWidth / 2, innerHeight / 3, 60);
+  showToast("Une nouvelle étoile dans ta constellation");
+  if (!S.pouches.length) setTimeout(pouchSheet, 900);
+}
+
+/* ---------- feuilles ---------- */
+function openSheet(html, bind) { const sh = $("sheet"); sh.onclick = null; sh.innerHTML = html; $("sheetWrap").hidden = false; bind && bind(sh); }
+function closeSheet() { $("sheetWrap").hidden = true; $("sheet").innerHTML = ""; }
+$("sheetWrap").addEventListener("click", e => { if (e.target === $("sheetWrap")) { pendingFull = null; closeSheet(); } });
+
+function pouchSheet(p) {
+  const editingP = !!p; let size = p ? p.size : "m";
+  openSheet(`<h3>${editingP ? "Modifier la bourse" : "Nouvelle bourse"}</h3>
+    <div class="field"><label for="rw">Ta récompense</label><input class="input" id="rw" maxlength="60" placeholder="Ex. un ramen, un jeu, une sortie ciné" value="${esc(p ? p.reward : "")}" autocomplete="off"></div>
+    <div class="field"><label>Taille de la bourse</label><div class="sizes">${SIZES.map(s => `<button class="size" data-s="${s.key}" aria-pressed="${s.key === size}"><span class="pv"><svg viewBox="0 0 200 230" style="height:${s.pw}">${pouchSVG(.6, { id:"sz" + s.key, mini:true })}</svg></span><b>${s.name}</b><span>${s.cap} éclats · ${s.hint}</span></button>`).join("")}</div></div>
+    <div class="row-btns">${editingP ? `<button class="btn danger" id="delP">Supprimer</button>` : `<button class="btn" id="cancelP">Annuler</button>`}<button class="btn main" id="saveP">${editingP ? "Enregistrer" : "Créer la bourse"}</button></div>`,
+  sh => {
+    sh.querySelectorAll("[data-s]").forEach(b => b.onclick = () => { size = b.dataset.s; sh.querySelectorAll("[data-s]").forEach(x => x.setAttribute("aria-pressed", String(x === b))); });
+    $("saveP").onclick = () => {
+      const reward = $("rw").value.trim(); if (!reward) { $("rw").focus(); return; }
+      if (editingP) { p.reward = reward; p.size = size; p.filled = Math.min(p.filled, sizeOf(size).cap); }
+      else {
+        const np = { id: uid(), reward, size, filled: 0, created: Date.now() };
+        const take = Math.min(S.reserve, sizeOf(size).cap); np.filled = take; S.reserve -= take;
+        S.pouches.push(np); S.activeId = np.id;
+      }
+      save(); closeSheet(); $("pouchSvg").dataset.pid = ""; renderAll();
+      if (!editingP) { const m = pouchMouth(); burst(m.x, m.y + 30, 40); }
+    };
+    if (editingP) {
+      const d = $("delP");
+      d.onclick = () => {
+        if (!d.dataset.armed) { d.dataset.armed = "1"; d.textContent = "Confirmer la suppression"; return; }
+        S.pouches = S.pouches.filter(x => x.id !== p.id); S.activeId = S.pouches[0] ? S.pouches[0].id : null;
+        save(); closeSheet(); $("pouchSvg").dataset.pid = ""; renderAll();
+      };
+    } else $("cancelP").onclick = closeSheet;
+    if (!editingP) setTimeout(() => $("rw").focus(), 50);
+  });
+}
+function taskSheet(t) {
+  const isNew = !t; let val = t ? t.value : 1, ic = t ? t.icon : "spark";
+  const has = n => S.tasks.some(x => x.name.toLowerCase() === n.toLowerCase());
+  const catalog = isNew ? `<p>Touche une idée pour l'ajouter directement, ou crée la tienne plus bas.</p>
+    ${CATALOG.map(c => `<div class="field"><label>${esc(c.cat)}</label><div class="sugg">${c.items.map(([n, i, v]) => `<button class="sg" data-n="${esc(n)}" data-ic="${i}" data-val="${v}" aria-pressed="${has(n)}"><span>${icon(i)}</span>${esc(n)}<b>+${v}</b></button>`).join("")}</div></div>`).join("")}
+    <div class="field"><label>Ou ta propre tâche</label></div>` : "";
+  openSheet(`<h3>${isNew ? "Nouvelle tâche" : "Modifier la tâche"}</h3>${catalog}
+    <div class="field"><label for="tn">Nom</label><input class="input" id="tn" maxlength="30" placeholder="Ex. Sortir le chien" value="${esc(t ? t.name : "")}" autocomplete="off"></div>
+    <div class="field"><label>Éclats gagnés</label><div class="values">${[1,2,3,5].map(v => `<button data-v="${v}" aria-pressed="${v === val}">+${v}</button>`).join("")}</div></div>
+    <div class="field"><label>Symbole</label><div class="icons">${Object.keys(ICONS).map(k => `<button data-i="${k}" aria-pressed="${k === ic}" aria-label="${k}">${icon(k)}</button>`).join("")}</div></div>
+    <div class="row-btns">${isNew ? `<button class="btn" id="cancelT">Annuler</button>` : `<button class="btn danger" id="delT">Supprimer</button>`}<button class="btn main" id="saveT">${isNew ? "Ajouter" : "Enregistrer"}</button></div>`,
+  sh => {
+    sh.querySelectorAll(".sg").forEach(b => b.onclick = () => {
+      const n = b.dataset.n;
+      if (has(n)) { S.tasks = S.tasks.filter(x => x.name.toLowerCase() !== n.toLowerCase()); b.setAttribute("aria-pressed", "false"); }
+      else { S.tasks.push({ id: uid(), name: n, icon: b.dataset.ic, value: +b.dataset.val }); b.setAttribute("aria-pressed", "true"); buzz(8); }
+      save(); renderTasks();
+    });
+    sh.querySelectorAll("[data-v]").forEach(b => b.onclick = () => { val = +b.dataset.v; sh.querySelectorAll("[data-v]").forEach(x => x.setAttribute("aria-pressed", String(x === b))); });
+    sh.querySelectorAll("[data-i]").forEach(b => b.onclick = () => { ic = b.dataset.i; sh.querySelectorAll("[data-i]").forEach(x => x.setAttribute("aria-pressed", String(x === b))); });
+    $("saveT").onclick = () => {
+      const name = $("tn").value.trim(); if (!name) { $("tn").focus(); return; }
+      if (isNew) S.tasks.push({ id: uid(), name, value: val, icon: ic }); else Object.assign(t, { name, value: val, icon: ic });
+      save(); closeSheet(); renderTasks();
+    };
+    if (isNew) $("cancelT").onclick = closeSheet;
+    else { const d = $("delT"); d.onclick = () => { if (!d.dataset.armed) { d.dataset.armed = "1"; d.textContent = "Confirmer"; return; } S.tasks = S.tasks.filter(x => x.id !== t.id); save(); closeSheet(); renderTasks(); }; }
+  });
+}
+
+/* ---------- toast ---------- */
+let toastT;
+function showToast(msg, undoFn) {
+  const el = $("toast");
+  el.innerHTML = `<span>${esc(msg)}</span>${undoFn ? `<button id="undoBtn">Annuler</button>` : ""}`;
+  el.hidden = false;
+  if (undoFn) $("undoBtn").onclick = () => { el.hidden = true; undoFn(); };
+  clearTimeout(toastT); toastT = setTimeout(() => { el.hidden = true; }, undoFn ? 4500 : 2600);
+}
+
+/* ---------- événements ---------- */
+$("tasks").addEventListener("click", e => {
+  if (e.target.closest("#newTask")) { taskSheet(); return; }
+  const b = e.target.closest("[data-t]"); if (!b) return;
+  const t = S.tasks.find(x => x.id === b.dataset.t); if (!t) return;
+  editing ? taskSheet(t) : doTask(t, b);
+});
+$("editTasks").onclick = () => { editing = !editing; renderTasks(); };
+$("chips").addEventListener("click", e => {
+  if (e.target.closest("#addPouch")) { pouchSheet(); return; }
+  const c = e.target.closest("[data-p]"); if (!c) return;
+  if (c.dataset.p === S.activeId) { pouchSheet(active()); return; }
+  S.activeId = c.dataset.p; save(); renderPouch(false); renderChips();
+});
+$("pouchSvg").addEventListener("click", () => { const p = active(); if (p && p.filled >= sizeOf(p.size).cap) { pendingFull = p.id; fullReveal(p); } else if (p) pouchSheet(p); else pouchSheet(); });
+function setTab(tab) {
+  $("tab-pouches").setAttribute("aria-selected", String(tab === "pouches"));
+  $("tab-sky").setAttribute("aria-selected", String(tab === "sky"));
+  $("view-pouches").hidden = tab !== "pouches"; $("view-sky").hidden = tab !== "sky";
+  if (tab === "sky") renderSky();
+  scrollTo(0, 0);
+}
+$("tab-pouches").onclick = () => setTab("pouches");
+$("tab-sky").onclick = () => setTab("sky");
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("sheetWrap").hidden) { pendingFull = null; closeSheet(); } });
+
+/* ---------- démarrage ---------- */
+sizeSky(); sizeFx(); renderAll(); kick();
+const p0 = active(); if (p0 && p0.filled >= sizeOf(p0.size).cap) setTimeout(() => { pendingFull = p0.id; fullReveal(p0); }, 600);
+})();
+</script>
+<script>if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));</script>
+</body>
+</html>
